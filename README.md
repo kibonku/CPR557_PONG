@@ -60,8 +60,10 @@ Build and Run (Windows / MSYS2 MinGW64)
    `mingw32-make`
 
 4) Run:
-   `./main.exe`
+   `./main.exe` 
 
+(VS Code option) You can also run with `F5` using "Run and Debug".
+ 
 Optional (recommended): If your Makefile supports it, you can also use:
    `make run`
 This should compile shaders, build the program, and run it.
