@@ -1,4 +1,4 @@
-# CPRE 557 — Computer Project #2: Pong (Vulkan + GLFW)
+# Computer Project #2: Pong (Vulkan + GLFW)
 
 ------------------------------------------------------------
 Overview
