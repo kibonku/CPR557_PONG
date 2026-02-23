@@ -50,33 +50,33 @@ Build and Run (Windows / MSYS2 MinGW64)
 1) Make sure Vulkan SDK is installed and your compiler environment is ready.
 
 2) Compile shaders (generates .spv files):
-   ./compile-win.bat
+   `./compile-win.bat`
 
    After this, the folder "shaders/" should contain:
-   - simple_shader.vert.spv
-   - simple_shader.frag.spv
+   - `simple_shader.vert.spv`
+   - `simple_shader.frag.spv`
 
 3) Build:
-   mingw32-make
+   `mingw32-make`
 
 4) Run:
-   ./main.exe
+   `./main.exe`
 
 Optional (recommended): If your Makefile supports it, you can also use:
-   make run
+   `make run`
 This should compile shaders, build the program, and run it.
 
 ------------------------------------------------------------
 Build and Run (Linux / macOS)
 ------------------------------------------------------------
 1) Compile shaders:
-   ./compile-unx.bat  (or the provided unix compile script in your template)
+   `./compile-unx.bat`  (or the provided unix compile script in your template)
 
 2) Build:
-   make
+   `make`
 
 3) Run:
-   ./main
+   `./main`
 
 (Exact command names may vary depending on your template setup.)
 
@@ -99,9 +99,8 @@ Notes / Troubleshooting
      working directory and fail to find shaders.
 
 ------------------------------------------------------------
-Files / Submission
+GitHub Repository
 ------------------------------------------------------------
-- All source code included in the project folder
-- Screenshot of the view window (in action)
-- This README.txt
-- Compressed as a zip for Canvas submission
+For reference, the source code is also available on GitHub (HHTPS):
+
+`https://github.com/kibonku/CPR557_PONG`
