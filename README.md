@@ -4,6 +4,11 @@
 Overview
 ------------------------------------------------------------
 This project implements a Pong-style game using Vulkan and GLFW.
+
+<p align="center">
+  <img src="assets/teaser.gif" width="560">
+</p>
+
 It includes:
 - Ball movement and wall bounce
 - Paddle movement via keyboard input
