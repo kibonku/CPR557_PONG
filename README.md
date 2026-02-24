@@ -60,7 +60,7 @@ Build and Run (Windows / MSYS2 MinGW64)
    `mingw32-make`
 
 4) Run:
-   `./main.exe` 
+   `./Assignment2.exe` 
 
 (VS Code option) You can also run with `F5` using "Run and Debug".
  
