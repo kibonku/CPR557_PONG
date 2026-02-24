@@ -3,84 +3,72 @@
 ------------------------------------------------------------
 Overview
 ------------------------------------------------------------
-This project reproduces a simple Pong-style game using Vulkan and GLFW.
+This project implements a Pong-style game using Vulkan and GLFW.
 It includes:
 - Ball movement and wall bounce
 - Paddle movement via keyboard input
 - Paddle–ball collision
 - Game reset
 - Two-player mode (two paddles)
-- Simple creativity features (see "Creativity" section)
+- Creativity feature: on-screen HUD showing Rally Score and Speed Level
 
 The paddles move horizontally (left/right), similar to the assignment example.
 
 ------------------------------------------------------------
 Controls
 ------------------------------------------------------------
-Bottom paddle (Blue):   A / D
-Top paddle (Red):       Left Arrow / Right Arrow
-Reset game:             SPACE
-Quit:                   ESC
+Top paddle (Red):        Left Arrow / Right Arrow
+Bottom paddle (Blue):    A / D
+Reset game:              SPACE
+Quit:                    ESC
 
 ------------------------------------------------------------
 Phases / Requirements Mapping
 ------------------------------------------------------------
 Phase 1 (Move the ball):
-- The ball moves continuously and bounces off the left/right walls.
+- The ball moves continuously and bounces off the side walls.
 
 Phase 2 (Move the paddle):
-- Paddles can be moved using the keyboard inputs listed above.
+- Two paddles can be moved using the keyboard inputs above.
 
 Phase 3 (Collision between paddle and ball):
-- When the ball collides with a paddle, the ball reflects and continues moving.
+- Ball reflects when it collides with a paddle (AABB collision).
 
 Phase 4 (Reset game):
-- Press SPACE to reset ball position/velocity and paddle positions.
+- SPACE resets the game (ball + paddles; HUD resets).
 
 Phase 5 (Two players):
 - Two paddles are included (top and bottom) with separate controls.
 
 Phase 6 (Creativity):
-- Ball speed increases slightly after paddle hits (if enabled in code).
-- (Optional) Console messages print reset/score events for clarity.
+- On-screen HUD (drawn inside the Vulkan view using pixel-quads + 7-seg digits):
+  * Score (Rally): counts the number of paddle hits in the current rally (00–99).
+  * Speed: shows the current speed level (01–99), increasing every rally hit.
+- Speed increases slightly after each paddle hit (rally hit). When a point is lost,
+  the rally score and speed level reset.
 
 ------------------------------------------------------------
 Build and Run (Windows / MSYS2 MinGW64)
 ------------------------------------------------------------
-1) Make sure Vulkan SDK is installed and your compiler environment is ready.
+1) Prerequisites
+   - Install the Vulkan SDK.
+   - Make sure MSYS2 MinGW64/UCRT64 build tools are available.
 
-2) Compile shaders (generates .spv files):
-   `./compile-win.bat`
+2) Compile shaders (generates .spv files)
+   ./compile-win.bat
 
-   After this, the folder "shaders/" should contain:
-   - `simple_shader.vert.spv`
-   - `simple_shader.frag.spv`
+   After this step, the folder "shaders/" should contain:
+   - simple_shader.vert.spv
+   - simple_shader.frag.spv
 
-3) Build:
-   `mingw32-make`
+3) Build
+   mingw32-make
 
-4) Run:
-   `./Assignment2.exe` 
+4) Run
+   ./Assignment2.exe
 
-(VS Code option) You can also run with `F5` using "Run and Debug".
- 
-Optional (recommended): If your Makefile supports it, you can also use:
-   `make run`
-This should compile shaders, build the program, and run it.
-
-------------------------------------------------------------
-Build and Run (Linux / macOS)
-------------------------------------------------------------
-1) Compile shaders:
-   `./compile-unx.bat`  (or the provided unix compile script in your template)
-
-2) Build:
-   `make`
-
-3) Run:
-   `./main`
-
-(Exact command names may vary depending on your template setup.)
+(Optional) If supported in your Makefile:
+   make run
 
 ------------------------------------------------------------
 Notes / Troubleshooting
@@ -88,18 +76,14 @@ Notes / Troubleshooting
 1) Shader file not found error:
    If you see:
      failed to open file: shaders/simple_shader.vert.spv
-   it means the SPIR-V shader files were not generated or the program was
-   launched from a different working directory.
-
-   Fix:
-   - Run compile-win.bat again to generate .spv files.
-   - Run the executable from the project root folder (where shaders/ exists).
+   run compile-win.bat again and make sure you launch the program from the
+   project root folder (where "shaders/" exists).
 
 2) VS Code:
    - Running with "Run and Debug (F5)" is recommended.
-   - Running directly from the "Run" button in main.cpp may use a different
-     working directory and fail to find shaders.
-
+   - If a debug run fails to find shaders, ensure the working directory is
+     the project root folder.
+     
 ------------------------------------------------------------
 GitHub Repository
 ------------------------------------------------------------
