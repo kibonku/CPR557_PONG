@@ -87,6 +87,6 @@ Notes / Troubleshooting
 ------------------------------------------------------------
 GitHub Repository
 ------------------------------------------------------------
-For reference, the source code is also available on GitHub (HHTPS):
+For reference, the source code is also available on GitHub:
 
-`https://github.com/kibonku/CPR557_PONG`
+`[https://github.com/kibonku/CPR557_PONG](https://github.com/kibonku/CPR557_PONG.git)`
