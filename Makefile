@@ -1,92 +1,162 @@
-CPRE 557 — Assignment 2: Pong (Vulkan + GLFW)
-Author: Kibon Ku
+########################################################################
 
-------------------------------------------------------------
-Overview
-------------------------------------------------------------
-This project implements a Pong-style game using Vulkan and GLFW.
-It includes:
-- Ball movement and wall bounce
-- Paddle movement via keyboard input
-- Paddle–ball collision
-- Game reset
-- Two-player mode (two paddles)
-- Creativity feature: on-screen HUD showing Rally Score and Speed Level
+####################### Makefile Template ##############################
 
-The paddles move horizontally (left/right), similar to the assignment example.
+########################################################################
 
-------------------------------------------------------------
-Controls
-------------------------------------------------------------
-Top paddle (Red):        Left Arrow / Right Arrow
-Bottom paddle (Blue):    A / D
-Reset game:              SPACE
-Quit:                    ESC
 
-------------------------------------------------------------
-Phases / Requirements Mapping
-------------------------------------------------------------
-Phase 1 (Move the ball):
-- The ball moves continuously and bounces off the side walls.
 
-Phase 2 (Move the paddle):
-- Two paddles can be moved using the keyboard inputs above.
+APPNAME = Assignment2
 
-Phase 3 (Collision between paddle and ball):
-- Ball reflects when it collides with a paddle (AABB collision).
+DEBUG = -g
 
-Phase 4 (Reset game):
-- SPACE resets the game (ball + paddles; HUD resets).
+VERBOSE = -v
 
-Phase 5 (Two players):
-- Two paddles are included (top and bottom) with separate controls.
+CXX = g++
 
-Phase 6 (Creativity):
-- On-screen HUD (drawn inside the Vulkan view using pixel-quads + 7-seg digits):
-  * Score (Rally): counts the number of paddle hits in the current rally (00–99).
-  * Speed: shows the current speed level (01–99), increasing every rally hit.
-- Speed increases slightly after each paddle hit (rally hit). When a point is lost,
-  the rally score and speed level reset.
 
-------------------------------------------------------------
-Build and Run (Windows / MSYS2 MinGW64)
-------------------------------------------------------------
-1) Prerequisites
-   - Install the Vulkan SDK.
-   - Make sure MSYS2 MinGW64/UCRT64 build tools are available.
 
-2) Compile shaders (generates .spv files)
-   ./compile-win.bat
+# For defining platform specific flags
 
-   After this step, the folder "shaders/" should contain:
-   - simple_shader.vert.spv
-   - simple_shader.frag.spv
+PLATFORM = $(shell uname -s)
 
-3) Build
-   mingw32-make
+# Handle special case for Windows 10 and 11 uname difference
 
-4) Run
-   ./Assignment2.exe
+ifeq ($(PLATFORM), Windows_NT)
 
-(Optional) If supported in your Makefile:
-   make run
+PLATFORM = Windows
 
-------------------------------------------------------------
-Notes / Troubleshooting
-------------------------------------------------------------
-1) Shader file not found error:
-   If you see:
-     failed to open file: shaders/simple_shader.vert.spv
-   run compile-win.bat again and make sure you launch the program from the
-   project root folder (where "shaders/" exists).
+else ifeq ($(shell echo $(PLATFORM) | cut -c1-7), MSYS_NT)
 
-2) VS Code:
-   - Running with "Run and Debug (F5)" is recommended.
-   - If a debug run fails to find shaders, ensure the working directory is
-     the project root folder.
+PLATFORM = Windows
 
-------------------------------------------------------------
-GitHub Repository
-------------------------------------------------------------
-Repo (SSH):   git@github.com:kibonku/CPR557_PONG.git
-Repo (HTTPS): https://github.com/kibonku/CPR557_PONG
+endif
+
+
+
+# Windiows definitions
+
+ifeq ($(PLATFORM), Windows)
+
+	APP_NAME = $(APPNAME).exe
+
+	GLM_PATH = $(VULKAN_SDK)/include
+
+	GLFW_PATH = $(VULKAN_SDK)/glfw-3.4.bin.WIN64/include
+
+	GLFW_LIB_PATH = $(VULKAN_SDK)/glfw-3.4.bin.WIN64/lib-mingw-w64
+
+	LDFLAGS = -L$(VULKAN_SDK)/Lib -L$(GLFW_LIB_PATH) -lvulkan-1 -lglfw3 -lgdi32
+
+	RUNSCRIP = ./compile-win.bat
+
+	DEFINES = __WINDOWS__
+
+
+
+# MacOS definitions
+
+else ifeq ($(PLATFORM), Darwin)
+
+	APP_NAME = $(APPNAME)
+
+	GLM_PATH = $(VULKAN_SDK)/include
+
+	GLFW_PATH = $(VULKAN_SDK)/glfw-3.4.bin.MACOS/include
+
+	GLFW_LIB_PATH = $(VULKAN_SDK)/glfw-3.4.bin.MACOS/lib-arm64
+
+	LDFLAGS = -L$(VULKAN_SDK)/lib -L$(GLFW_LIB_PATH) -rpath $(VULKAN_SDK)/lib -lvulkan -lglfw3 -framework Cocoa -framework IOKit
+
+	RUNSCRIP = ./compile-unx.bat
+
+	DEFINES = __DARWIN__
+
+
+
+# Linux definitions
+
+else ifeq ($(PLATFORM), Linux)
+
+	APP_NAME = $(APPNAME)
+
+	GLM_PATH = /usr/include/glm-master
+
+	GLFW_PATH = /usr/include/GLFW
+
+	GLFW_LIB_PATH = /usr/lib/x86_64-linux-gnu
+
+	LDFLAGS = -L$(VULKAN_SDK)/lib -L$(GLFW_LIB_PATH) -lvulkan -lglfw
+
+	RUNSCRIP = ./compile-unx.bat
+
+	DEFINES = __LINUX__
+
+endif
+
+
+
+CFLAGS = -std=c++17 $(DEBUG) -I. -I$(VULKAN_SDK)/include -I$(GLM_PATH) -I$(GLFW_PATH)
+
+include LOCAL_SRCS
+
+
+
+# Object files
+
+OBJECTS = $(CPPSRCS:.cpp=.o)
+
+
+
+# Default target
+
+all: $(APPNAME)
+
+
+
+# Link object files to create the executable
+
+$(APPNAME): $(OBJECTS)
+
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+	@echo Done!
+
+
+
+# Compile C++ files
+
+%.o: %.cpp
+
+	$(CXX) -D$(DEFINES) $(CFLAGS) -c $< -o $@
+
+
+
+shader:
+
+ifneq ($(PLATFORM), Windows)
+
+	chmod 755 $(RUNSCRIP)
+
+endif
+
+	$(RUNSCRIP)
+
+
+
+run: $(APP_NAME)
+
+	./$(APP_NAME)
+
+
+
+clean:
+
+	rm -f $(OBJECTS) $(APP_NAME)
+
+
+
+test:
+
+	@echo $(PLATFORM)
+
